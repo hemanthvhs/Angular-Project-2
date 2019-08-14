@@ -1,0 +1,25 @@
+div.container {
+    margin-left      : 30px;
+    background-color : #EBF5FB;
+}
+
+div.row {
+   
+    margin-left : 30px;
+    margin-right: 30px;
+    
+}
+
+label#labelcolor {
+    color : #1a8cff;
+    font-size: 17px;
+    background-color: 
+}
+
+div.maindiv {
+    margin-top : 40px;
+}
+
+input {
+    background-color : #F4F6F7;
+}

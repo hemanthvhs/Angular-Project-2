@@ -1,0 +1,369 @@
+<div class="container">
+<div class="maindiv">
+  <form [formGroup]="hrPortalDispForm">
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="caseno" class="control-label">Case No</label>
+        <input id="caseno" type="text" class="form-control" formControlName="caseno">
+      </div>
+
+      <div class="form-group  col-xs-offset-2 col-xs-5">
+          <label for="status" class="control-label">Status</label>
+          <input id="status" type="text" class="form-control" formControlName="status">
+      </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="userid" class="control-label">User ID</label>
+        <input id="userid" type="text" class="form-control" formControlName="userid">
+      </div>
+
+      <div class="form-group  col-xs-offset-2 col-xs-5">
+          <label for="substatus" class="control-label">Sub Status</label>
+          <input id="substatus" type="text" class="form-control" formControlName="substatus">
+      </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="employeename" class="control-label">Employee Name</label>
+        <input id="employeename" type="text" class="form-control" formControlName="employeename">
+      </div>
+</div>
+
+<br>
+    <div class="row">
+        <div class="form-group">
+            <label id="labelcolor"  class="control-label col-xs-12">Issue Information</label>
+          </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="form-group col-xs-5">
+            <label for="subject" class="control-label">Subject</label>
+            <input id="subject" type="text" class="form-control" formControlName="subject">
+          </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-group col-xs-5">
+            <label for="issue" class="control-label">Issue</label>
+            <input id="issue" type="text" class="form-control" formControlName="issue">
+          </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-group col-xs-5">
+            <label for="regarding" class="control-label">Regarding</label>
+            <input id="regarding" type="text" class="form-control" formControlName="regarding">
+          </div>
+    </div>
+<br>
+<div class="row">
+    <div class="form-group">
+        <label id="labelcolor"  class="control-label col-xs-12">Case Information</label>
+      </div>
+</div>
+<br>
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="population" class="control-label">Population</label>
+        <input id="population" type="text" class="form-control" formControlName="population">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="casestatus" class="control-label">Status</label>
+          <input id="casestatus" type="text" class="form-control" formControlName="casestatus">
+        </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="topic" class="control-label">Topic</label>
+        <input id="topic" type="text" class="form-control" formControlName="topic">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="casesubstatus" class="control-label">Sub Status</label>
+          <input id="casesubstatus" type="text" class="form-control" formControlName="casesubstatus">
+        </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="category" class="control-label">Category</label>
+        <input id="category" type="text" class="form-control" formControlName="category">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="showcasetoemployee" class="control-label">Show Case To Employee</label>
+          <input id="showcasetoemployee" type="text" class="form-control" formControlName="showcasetoemployee">
+        </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="subcategory" class="control-label">Sub Category</label>
+        <input id="subcategory" type="text" class="form-control" formControlName="subcategory">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="priority" class="control-label">Priority</label>
+          <input id="priority" type="text" class="form-control" formControlName="priority">
+        </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="secure" class="control-label">Secure</label>
+        <input id="secure" type="text" class="form-control" formControlName="secure">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="reminderdate" class="control-label">Reminder Date</label>
+          <input id="reminderdate" type="text" class="form-control" formControlName="reminderdate">
+        </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="servicegroup" class="control-label">Service Group</label>
+        <input id="servicegroup" type="text" class="form-control" formControlName="servicegroup">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="source" class="control-label">Source</label>
+          <input id="source" type="text" class="form-control" formControlName="source">
+        </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="assignedto" class="control-label">Assigned To</label>
+        <input id="assignedto" type="text" class="form-control" formControlName="assignedto">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="timespent" class="control-label">Time Spent</label>
+          <input id="timespent" type="text" class="form-control" formControlName="timespent">
+        </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="sladate" class="control-label">SLA Date</label>
+        <input id="sladate" type="text" class="form-control " formControlName="sladate">
+      </div>
+</div>
+
+<br>
+<div class="row">
+    <div class="form-group">
+        <label id="labelcolor"  class="control-label col-xs-12" >Additional Information</label>
+      </div>
+</div>
+<br>
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="sendcasetonextlevel" class="control-label">Enviar Caso a Siguiente Nivel</label>
+        <input id="sendcasetonextlevel" type="text" class="form-control" formControlName="sendcasetonextlevel">
+      </div>
+
+      <div class="form-group col-xs-offset-2 col-xs-5">
+          <label for="compliancedate" class="control-label">Fecha de Cumplimiento</label>
+          <input id="compliancedate" type="text" class="form-control" formControlName="compliancedate">
+        </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="transfertoprovider" class="control-label">Transferir a Proveedor</label>
+        <input id="transfertoprovider" type="text" class="form-control" formControlName="transfertoprovider">
+      </div>
+
+      <div class="form-group form-check col-xs-offset-2 col-xs-5">
+          <label for="scalefile" class="control-label">Escalar Expediente  </label><br>
+          <input id="scalefile" type="checkbox"  formControlName="scalefile">
+      </div>
+       
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="defectype" class="control-label">Defect Type</label>
+        <input id="defectype" type="text" class="form-control" formControlName="defectype">
+      </div>
+
+      <div class="form-group form-check col-xs-offset-2 col-xs-5">
+          <label for="breakfix" class="control-label">Break Fix </label><br>
+          <input id="breakfix" type="checkbox"  formControlName="breakfix">
+      </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="preferredmethodofcommunication" class="control-label">Metodo Preferido de Comunicacion</label>
+        <input id="preferredmethodofcommunication" type="text" class="form-control" formControlName="preferredmethodofcommunication">
+      </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="personalemailaddress" class="control-label">Direccion de Correo Electronico personal</label>
+        <input id="personalemailaddress" type="text" class="form-control" formControlName="personalemailaddress">
+      </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="authorizedtocall" class="control-label">Quien Esta Autorizado para Llamr en su Lagar</label>
+        <input id="authorizedtocall" type="text" class="form-control" formControlName="authorizedtocall">
+      </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="defectreason" class="control-label">Defect Reason</label>
+        <input id="defectreason" type="text" class="form-control" formControlName="defectreason">
+      </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="rootcause" class="control-label">Root Cause</label>
+        <input id="rootcause" type="text" class="form-control" formControlName="rootcause">
+      </div>
+</div>
+<br>
+<div class="row">
+    <div class="form-group">
+        <label id="labelcolor"  class="control-label col-xs-12">Employee Information</label>
+      </div>
+</div>
+<br>
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="employeenameinfo" class="control-label">Employee Name</label>
+        <input id="employeenameinfo" type="text" class="form-control" formControlName="employeenameinfo">
+      </div>
+
+      <div class="form-group  col-xs-offset-2 col-xs-5">
+          <label for="useridinfo" class="control-label">User ID</label>
+          <input id="useridinfo" type="text" class="form-control" formControlName="useridinfo">
+      </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="contactname" class="control-label">Contact Name</label>
+        <input id="contactname" type="text" class="form-control" formControlName="contactname">
+      </div>
+
+      <div class="form-group  col-xs-offset-2 col-xs-5">
+          <label for="email" class="control-label">Email</label>
+          <input id="email" type="text" class="form-control" formControlName="email">
+      </div>
+</div>
+
+<br>
+<div class="row">
+    <div class="form-group">
+        <label id="labelcolor"  class="control-label col-xs-12">Audit Information</label>
+      </div>
+</div>
+<br>
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="created" class="control-label">Created</label>
+        <input id="created" type="text" class="form-control" formControlName="created">
+      </div>
+
+      <div class="form-group  col-xs-offset-2 col-xs-5">
+          <label for="createdby" class="control-label">Created By</label>
+          <input id="createdby" type="text" class="form-control" formControlName="createdby">
+      </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="lastmodified" class="control-label">Last Modified</label>
+        <input id="lastmodified" type="text" class="form-control" formControlName="lastmodified">
+      </div>
+
+      <div class="form-group  col-xs-offset-2 col-xs-5">
+          <label for="lastmodifiedby" class="control-label">Last Modified By</label>
+          <input id="lastmodifiedby" type="text" class="form-control" formControlName="lastmodifiedby">
+      </div>
+
+</div>
+
+<div class="row">
+    <div class="form-group col-xs-5">
+        <label for="closed" class="control-label">Closed</label>
+        <input id="closed" type="text" class="form-control" formControlName="closed">
+      </div>
+
+      <div class="form-group  col-xs-offset-2 col-xs-5">
+          <label for="closedby" class="control-label">Closed By</label>
+          <input id="closedby" type="text" class="form-control" formControlName="closedby">
+      </div>
+
+</div>
+<br>
+<div class="row">
+    <div class="form-group">
+        <label id="labelcolor"  class="control-label col-xs-12">Notes</label>
+      </div>
+</div>
+<br>
+
+
+    <div formArrayName="casenotes" *ngFor="let casenote of hrPortalDispForm.get('casenotes').controls;let i=index">
+      <div formGroupName={{i}}>
+          <div class="row">
+
+            <div class="form-group col-xs-2">
+                <label attr.for="{{'casenote'+i}}" class="control-label">Type</label>             
+                <input id="{{'casenote'+i}}" class="form-control" formControlName="type">
+            </div>
+
+            <div class="form-group col-xs-2">
+                <label attr.for="{{'casenote'+i}}" class="control-label">Details</label>             
+                <input id="{{'casenote'+i}}" class="form-control" formControlName="details">
+            </div>
+
+            <div class="form-group col-xs-2">
+                <label attr.for="{{'casenote'+i}}" class="control-label">Updated By</label>             
+                <input id="{{'casenote'+i}}" class="form-control" formControlName="updatedby">
+            </div>
+
+          </div>
+
+      </div>
+    </div>
+
+
+
+
+
+
+      
+
+
+
+
+  
+
+  </form>
+  </div>
+  <br><br>
+</div>
