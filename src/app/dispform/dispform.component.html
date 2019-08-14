@@ -326,27 +326,21 @@
 </div>
 <br>
 
-
+<div class="row">
+    <label class="control-label col-xs-3">Type</label>
+    <label class="control-label col-xs-6">Details</label>
+    <label class="control-label col-xs-3">Updated By</label>
+  </div>
+ 
     <div formArrayName="casenotes" *ngFor="let casenote of hrPortalDispForm.get('casenotes').controls;let i=index">
+  
       <div formGroupName={{i}}>
-          <div class="row">
-
-            <div class="form-group col-xs-2">
-                <label attr.for="{{'casenote'+i}}" class="control-label">Type</label>             
-                <input id="{{'casenote'+i}}" class="form-control" formControlName="type">
-            </div>
-
-            <div class="form-group col-xs-2">
-                <label attr.for="{{'casenote'+i}}" class="control-label">Details</label>             
-                <input id="{{'casenote'+i}}" class="form-control" formControlName="details">
-            </div>
-
-            <div class="form-group col-xs-2">
-                <label attr.for="{{'casenote'+i}}" class="control-label">Updated By</label>             
-                <input id="{{'casenote'+i}}" class="form-control" formControlName="updatedby">
-            </div>
-
-          </div>
+        <div class="row">
+            <input id ="formgroup" class="col-xs-3 form-control" formControlName="type">
+            <textarea id ="formgroup1" class="col-xs-6 form-control" formControlName="details"></textarea>
+            <input id ="formgroup2" class="col-xs-3 form-control" formControlName="updatedby">
+        </div>
+      
 
       </div>
     </div>

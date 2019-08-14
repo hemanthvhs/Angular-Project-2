@@ -71,14 +71,14 @@ export class DispformComponent implements OnInit {
     })
 
       this.hrPortalDispForm.setControl('casenotes',this.addExistingCaseNotes(this.data))
-    
+      console.log(this.hrPortalDispForm.get('casenotes'))
   }   // End of OnInit
 
   addCaseNotesFormGroup() : FormGroup {
     return this.formBuilder.group({
       type : [''],
       details : [''],
-      updatedby : ['']
+      updatedby : [''],
     })
   }
 
@@ -86,6 +86,7 @@ export class DispformComponent implements OnInit {
  
     const formArray = new FormArray([])
     data.forEach(d => {
+      console.log(d.updatedby)
       formArray.push(this.formBuilder.group({
         type : d.type,
         details : d.details,

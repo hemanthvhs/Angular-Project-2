@@ -13,7 +13,7 @@ div.row {
 label#labelcolor {
     color : #1a8cff;
     font-size: 17px;
-    background-color: 
+    
 }
 
 div.maindiv {
@@ -23,3 +23,27 @@ div.maindiv {
 input {
     background-color : #F4F6F7;
 }
+
+#formgroup {
+    width : 25%;
+    height : 64px;
+    background-color : #fff;
+    border: none !important;
+}
+
+textarea#formgroup1 {
+    width : 50%;
+    border: none !important;
+    padding-top : 18px;
+}
+
+#formgroup2 {
+    width : 24%;
+    height : 64px;
+    background-color : #fff;
+    border: none !important;
+}
+
+
+
+
