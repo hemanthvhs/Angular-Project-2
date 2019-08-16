@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms'
+import { MatTableDataSource } from '@angular/material/table';
+import { PrintService } from '../shared/services/print.service';
 
 @Component({
   selector: 'app-dispform',
@@ -10,12 +12,22 @@ export class DispformComponent implements OnInit {
 
   hrPortalDispForm : FormGroup
 
-  constructor(private formBuilder : FormBuilder){}
+  displayedColumns : string[] = ['date','from', 'urgent', 'to','cc', 'subject']
 
-   data = [
-    { type : 'TestType',details : 'TestDetails',updatedby : 'TestUpdatedBy'},
-    { type : 'TestType1',details : 'TestDetails1',updatedby : 'TestUpdatedBy1'}
-    ]
+  casenotesdisplayedColumns :  string[] = ['type','details', 'updatedby']
+
+  dataSource = new MatTableDataSource()
+  casenotesdataSource = new MatTableDataSource()
+
+  constructor(private formBuilder : FormBuilder,
+              private printService : PrintService){}
+
+   casenotesdata = [
+           { type : 'TestType',details : 'TestDetails',updatedby : 'TestUpdatedBy'},
+           { type : 'TestType1',details : 'TestDetails1',updatedby : 'TestUpdatedBy1'} ]
+
+   emaildata = [ { date:'16/08/2019',from:'Virat Kohli',urgent:'',to:'ab@bd.com',cc:'gh@bd.com',subject:'test-subject'} ,
+                 { date:'17/08/2019',from:'Hemanth Sharma',urgent:'',to:'jh@bd.com',cc:'FB@bd.com',subject:'test-subject1'}]
 
   
   ngOnInit() {
@@ -65,13 +77,17 @@ export class DispformComponent implements OnInit {
       createdby : [''],
       lastmodifiedby : [''],
       closedby : [''],
-      casenotes : this.formBuilder.array([
+     /*  casenotes : this.formBuilder.array([
         this.addCaseNotesFormGroup()
-      ])
+      ]) */
     })
 
-      this.hrPortalDispForm.setControl('casenotes',this.addExistingCaseNotes(this.data))
-      console.log(this.hrPortalDispForm.get('casenotes'))
+      //this.hrPortalDispForm.setControl('casenotes',this.addExistingCaseNotes(this.data))
+     
+      this.dataSource.data = this.emaildata 
+      this.casenotesdataSource.data = this.casenotesdata
+
+
   }   // End of OnInit
 
   addCaseNotesFormGroup() : FormGroup {
@@ -95,5 +111,9 @@ export class DispformComponent implements OnInit {
     })
     return formArray
   }
+
+  onPrint() {
+    this.printService.onDataReady()
+  }
   
-}
+}  // End of component
