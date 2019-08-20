@@ -44,13 +44,13 @@ textarea#formgroup1 {
     border: none !important;
 }
 
-.mat-column-type {
+/* .mat-column-type {
     flex: 0 0 199px;
 }
 
 .mat-column-details {
     flex: 0 0 688px;
-}
+} */
 
 .mat-cell, .mat-header-cell {
      overflow: hidden; 
