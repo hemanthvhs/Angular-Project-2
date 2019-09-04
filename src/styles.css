@@ -4,3 +4,11 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
+
+.red-snackbar {
+    background: #ff6666;
+}
+
+.mat-dialog-container {
+    padding: 0px;
+}

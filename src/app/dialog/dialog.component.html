@@ -1,0 +1,22 @@
+<div *ngIf = "message == 'Delete'">
+    <h5 class="mat-dialog-title">Case No : VKVHS03</h5>
+    <h5 class="mat-dialog-title">Delete ?</h5>
+    <mat-dialog-actions>
+      <button mat-button mat-dialog-close mat-dialog-close="false">No</button>
+      <button mat-button mat-dialog-close mat-dialog-close="true">Yes</button>  
+    </mat-dialog-actions>
+</div>
+
+<div *ngIf = "message == 'Atleast one filter is required'">
+    <h5 class="mat-dialog-title" >Atleast one filter is required</h5>
+    <mat-dialog-actions>
+    <button id="customBtn" mat-button mat-dialog-close mat-dialog-close="true">OK</button>
+    </mat-dialog-actions>
+</div>
+     
+
+
+
+
+
+

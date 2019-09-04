@@ -1,0 +1,17 @@
+button {
+    margin-left : 40px;
+}
+
+* {
+    font-family : Calibri;
+}
+
+.mat-dialog-title {
+    text-align : center ;
+    font-weight: bold;
+}
+
+button#customBtn {
+    margin-left : 70px;
+}
+

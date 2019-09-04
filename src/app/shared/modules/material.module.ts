@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-/* import { MatTableModule } from '@angular/material/table'
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator'; */
-
-import {
-    MatInputModule,MatFormFieldModule,MatDatepickerModule,MatButtonModule, 
-    MatTableModule,MatSortModule,MatNativeDateModule,MatPaginatorModule ,
-    MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule} from '@angular/material';
+import { MatSelectModule,MatCheckboxModule,MatDialogModule,MatTooltipModule,MatSnackBarModule,MatFormFieldModule,MatDatepickerModule,MatButtonModule, 
+         MatTableModule,MatSortModule,MatNativeDateModule,MatPaginatorModule ,
+         MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule } from '@angular/material';
 
 
 @NgModule({
 
-imports: [MatFormFieldModule,MatDatepickerModule,MatButtonModule,MatTableModule,
+imports: [ MatSelectModule,MatCheckboxModule,MatDialogModule,MatTooltipModule,MatSnackBarModule,MatFormFieldModule,MatDatepickerModule,MatButtonModule,MatTableModule,
           MatSortModule,MatPaginatorModule,MatNativeDateModule,MatIconModule,
-          MatSidenavModule, MatListModule, MatToolbarModule],
+          MatSidenavModule, MatListModule, MatToolbarModule ],
 
-exports: [ MatFormFieldModule,MatDatepickerModule,MatButtonModule,MatTableModule,
+exports: [ MatSelectModule,MatCheckboxModule,MatDialogModule,MatTooltipModule,MatSnackBarModule,MatFormFieldModule,MatDatepickerModule,MatButtonModule,MatTableModule,
           MatSortModule,MatPaginatorModule,MatNativeDateModule,MatIconModule,MatSidenavModule, 
-          MatListModule, MatToolbarModule]
+          MatListModule, MatToolbarModule ]
 
 })
 

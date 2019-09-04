@@ -1,0 +1,163 @@
+<mat-toolbar>
+  <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+    <mat-icon aria-label="Side nav toggle icon">search</mat-icon>
+  </button>
+  <span class="filter">Filters</span>
+  <span class="fill-remaining-space"></span>
+  <span>HR Portal Archive</span>
+  <span class="fill-remaining-space"></span>
+</mat-toolbar>
+
+
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #drawer mode="side" opened role="navigation">
+    <mat-nav-list>
+      <form [formGroup]="searchForm">
+
+        <label for="serviceGroup" class="control-label">Service Group</label>
+        <mat-form-field appearance="outline">
+          <mat-select (selectionChange)="onServiceGroupChange($event.value)" formControlName="servicegroup">
+            <mat-option>None</mat-option>
+            <mat-option [value]="serviceGroup" *ngFor="let serviceGroup of (serviceGroup$ | async)"> {{serviceGroup}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <label for="population" class="control-label">Population</label>
+        <mat-form-field appearance="outline">
+          <mat-select (selectionChange)="onPopulationChange($event.value)" formControlName="population">
+            <mat-option>None</mat-option>
+            <mat-option [value]="population" *ngFor="let population of (population$ | async)">{{population}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <label for="category" class="control-label">Category</label>
+        <mat-form-field appearance="outline">
+          <mat-select multiple (selectionChange)="onCategoryChange($event.value)" formControlName="category">
+            <mat-select-trigger>
+              {{category.value ? category.value[0] : ''}}
+              <span *ngIf="category.value?.length > 1" class="example-additional-selection">
+                (+{{category.value.length - 1}} {{category.value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="category" *ngFor="let category of categories">{{category}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <label for="subcategory" class="control-label">Sub Category</label>
+        <mat-form-field appearance="outline">
+          <mat-select multiple formControlName="subcategory">
+            <mat-select-trigger>
+              {{subcategory.value ? subcategory.value[0] : ''}}
+              <span *ngIf="subcategory.value?.length > 1" class="example-additional-selection">
+                (+{{subcategory.value.length - 1}} {{subcategory.value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option [value]="subCategory" *ngFor="let subCategory of (subCategory$ | async)">{{subCategory}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+      </form>
+
+      <br>
+
+      <div class="form-group btn-toolbar">
+
+        <button class="btn btn-success" type="button" (click)="onSearch()">Search</button>
+      </div>
+
+
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <!-- Side Bar Content !!! -->
+    <mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()">
+          </mat-checkbox>
+        </mat-header-cell>
+
+        <mat-cell *matCellDef="let row">
+          <mat-checkbox #checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+
+      </ng-container>
+
+      <ng-container matColumnDef="Ticketcode">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Ticket Code</mat-header-cell>
+        <mat-cell *matCellDef="let tickets">{{tickets.Ticketcode}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button matTooltip="Form" (click)="onLaunch(row.id)">
+            <mat-icon>launch</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete" color="warn" (click)="onDelete()">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="USER_NAME">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>User Name</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.USER_NAME}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Priority">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Priority</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.Priority}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="ServiceGroup">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Service Group</mat-header-cell>
+              <mat-cell *matCellDef="let tickets">{{tickets.ServiceGroup}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Population">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Population</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.Population}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Category">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.Category}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="SubCategory">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Category</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.SubCategory}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Email">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.Email}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="CreatedDateTime">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Created Date</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.CreatedDateTime}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Closed_Date_Time">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Closed Date</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.Closed_Date_Time}}</mat-cell>
+      </ng-container>
+
+      
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row ;columns : displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

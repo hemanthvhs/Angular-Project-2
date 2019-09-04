@@ -1,5 +1,8 @@
 div.container {
-    margin-left      : 30px;
+    /* margin-left      : 30px; */
+    margin-right: auto;
+    margin-left: auto;
+
     background-color : #EBF5FB;
 }
 
@@ -22,6 +25,7 @@ div.maindiv {
 
 input {
     background-color : #F4F6F7;
+    
 }
 
 #formgroup {
@@ -59,7 +63,8 @@ textarea#formgroup1 {
     }
 
 
-
     div.btn-toolbar {
-        margin-left : 550px
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }

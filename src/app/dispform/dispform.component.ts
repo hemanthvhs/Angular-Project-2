@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms'
 import { MatTableDataSource } from '@angular/material/table';
 import { PrintService } from '../shared/services/print.service';
 import { SqlService } from '../shared/services/sql.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dispform',
@@ -22,7 +23,8 @@ export class DispformComponent implements OnInit {
 
   constructor(private formBuilder : FormBuilder,
               private printService : PrintService,
-              private sqlService : SqlService){}
+              private router : Router,
+              private route : ActivatedRoute ){}
 
    casenotesdata = [
            { type : 'TestType',details : 'TestDetails',updatedby : 'TestUpdatedBy'},
@@ -33,6 +35,8 @@ export class DispformComponent implements OnInit {
 
   
   ngOnInit() {
+
+    document.body.style.backgroundColor = "#EBF5FB";
 
     this.hrPortalDispForm = this.formBuilder.group({
       caseno : [''],
@@ -85,11 +89,6 @@ export class DispformComponent implements OnInit {
       this.dataSource.data = this.emaildata 
       this.casenotesdataSource.data = this.casenotesdata
 
-      this.sqlService.getCaseDetails().subscribe( (data : Response) => {
-        console.log(data)
-      })
-
-
   }   // End of OnInit
 
 
@@ -98,7 +97,7 @@ export class DispformComponent implements OnInit {
   }
 
   onClose() {
-  
+    this.router.navigate(["/search"],{relativeTo : this.route})
   }
   
 }  // End of component

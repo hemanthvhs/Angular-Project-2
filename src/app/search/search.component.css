@@ -1,0 +1,94 @@
+.example-container {
+    height: 130%;
+    margin: 10px;
+    
+  }
+  
+mat-sidenav {
+    width: 290px;
+    background-color: #f2f2f2
+}
+
+mat-toolbar {
+    background-color : #b3d9ff
+}
+
+select {
+    background-color : #ffffff ;
+    width : 250px;
+    margin-left : 15px;
+  
+}
+
+label {
+    margin-left : 15px;
+}
+
+input {
+    margin-left : 15px;
+    width : 215px;
+    border-radius : 4px;
+    height : 34px;
+    border : 1px solid #ccc;
+    background-color : #ffffff ;
+    padding-left : 12px;
+}
+
+.btn-toolbar {
+    margin-left : 60px
+}
+
+.fill-remaining-space {
+    flex : 1 1 auto;
+}
+
+span.filter {
+    font-size : 15px;
+}
+
+
+#bsspan{
+    width : 55px;
+}
+
+span.input-group-addon {
+    padding-left : 20px;
+}
+
+ ::ng-deep  .mat-checkbox-checked .mat-checkbox-background {
+
+   background-color: #808080 !important;
+}
+
+
+
+
+::ng-deep  .mat-form-field-appearance-outline .mat-form-field-flex {
+	width : 250px;
+	margin-left : 15px;
+    height : 38px;
+    margin-top: 0px;
+    margin-bottom :0px;
+    padding-top:0px;
+    
+}
+
+::ng-deep .mat-form-field-infix {
+    margin-top:-10px;
+
+}
+
+
+.mat-table__wrapper .mat-table {
+    min-width: auto !important;
+    width: 100% !important;
+}
+
+.mat-header-row {
+    width: 100%;
+}
+
+.mat-row {
+    width: 100%;
+}
+
