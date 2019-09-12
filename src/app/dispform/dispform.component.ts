@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { PrintService } from '../shared/services/print.service';
 import { SqlService } from '../shared/services/sql.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import {  mergeMap, map } from 'rxjs/operators'
 
 @Component({
   selector: 'app-dispform',
@@ -12,7 +13,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class DispformComponent implements OnInit {
 
-  hrPortalDispForm : FormGroup
+  hrPortalDispForm : FormGroup;
+  ticketCode       : string
 
   displayedColumns : string[] = ['date','from', 'urgent', 'to','cc', 'subject']
 
@@ -22,6 +24,7 @@ export class DispformComponent implements OnInit {
   casenotesdataSource = new MatTableDataSource()
 
   constructor(private formBuilder : FormBuilder,
+              private sqlService  : SqlService,
               private printService : PrintService,
               private router : Router,
               private route : ActivatedRoute ){}
@@ -37,6 +40,24 @@ export class DispformComponent implements OnInit {
   ngOnInit() {
 
     document.body.style.backgroundColor = "#EBF5FB";
+
+    this.route.queryParams.pipe(
+      mergeMap( params => {
+      this.ticketCode = params.TicketCode
+      return this.sqlService.getTicketCodeDetails(this.ticketCode)
+    }),
+    mergeMap(ticketDetails => {
+      console.log("Inside 2nd merge")
+      console.log(this.ticketCode)
+      return this.sqlService.getAttachments(this.ticketCode)
+             .pipe(map(attachmentsData => {
+               return {ticketDetails,attachmentsData}
+             }))
+    })
+    ).subscribe( (resposne) => {
+      console.log(resposne)
+    })
+    
 
     this.hrPortalDispForm = this.formBuilder.group({
       caseno : [''],
@@ -89,15 +110,19 @@ export class DispformComponent implements OnInit {
       this.dataSource.data = this.emaildata 
       this.casenotesdataSource.data = this.casenotesdata
 
+
   }   // End of OnInit
 
 
   onPrint() {
+  
     this.printService.onDataReady()
+   
   }
 
   onClose() {
     this.router.navigate(["/search"],{relativeTo : this.route})
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
   }
   
 }  // End of component

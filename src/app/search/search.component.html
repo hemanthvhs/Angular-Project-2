@@ -1,4 +1,12 @@
-<mat-toolbar>
+<ngx-spinner
+size = "medium"
+color = "#fff"
+type = "line-scale"
+>
+<p style="color: white" > Loading... </p>
+</ngx-spinner>
+
+<mat-toolbar *ngIf="outlet.isActivated == false">
   <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
     <mat-icon aria-label="Side nav toggle icon">search</mat-icon>
   </button>
@@ -9,7 +17,7 @@
 </mat-toolbar>
 
 
-<mat-sidenav-container class="example-container">
+<mat-sidenav-container class="example-container" *ngIf="outlet.isActivated == false">
   <mat-sidenav #drawer mode="side" opened role="navigation">
     <mat-nav-list>
       <form [formGroup]="searchForm">
@@ -96,12 +104,16 @@
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> 
+            <button mat-icon-button matTooltip="Delete" color="warn" (click)="onMultiDelete()" *ngIf="this.selection.selected.length > 1">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+        </mat-header-cell>
         <mat-cell *matCellDef="let row">
-          <button mat-icon-button matTooltip="Form" (click)="onLaunch(row.id)">
+          <button mat-icon-button matTooltip="Form" (click)="onLaunch(row.Ticketcode)">
             <mat-icon>launch</mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Delete" color="warn" (click)="onDelete()">
+          <button mat-icon-button matTooltip="Delete" color="warn" (click)="onDelete(row.Ticketcode)" *ngIf="this.selection.selected.length == 0 || this.selection.selected.length == 1 ">
             <mat-icon>delete_outline</mat-icon>
           </button>
         </mat-cell>
@@ -161,3 +173,8 @@
 
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+
+
+    <router-outlet #outlet="outlet"></router-outlet>
+

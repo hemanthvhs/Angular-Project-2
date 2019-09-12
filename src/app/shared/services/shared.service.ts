@@ -8,11 +8,12 @@ export class SharedService {
 
   constructor() { }
 
-  private messageSource = new BehaviorSubject<Object>("");
-  currentMessage = this.messageSource.asObservable();
+  private messageSource   = new BehaviorSubject<Object>("");
+  currentMessage          = this.messageSource.asObservable();
 
-  passMessage(dialogMessage : {message: string , caseNo ?: string}) {
+
+  passMessage(dialogMessage : {message: string , ticketCode ?: string}) {
     this.messageSource.next(dialogMessage)
   }
-  
+
 }

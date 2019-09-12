@@ -16,16 +16,17 @@ import { NotificationService } from './shared/services/notification.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { SharedService } from './shared/services/shared.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { AppRoutingModule } from './app-routing.module';
 import { RouterModule,Routes } from '@angular/router';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 const appRoutes : Routes = [
-  { path : 'search' , component: SearchComponent },
-  { path : 'search/form/:TicketID/readonly' ,component:DispformComponent},
-  { path : '' , redirectTo : '/search' , pathMatch : 'full' } ,
+  { path : '' , component: SearchComponent },
+  { path : 'search' , component: SearchComponent,
+    children : [{ path : 'form' , component : DispformComponent}]},
   { path : 'not-found' , component : PageNotFoundComponent},
-  /* { path : '**' , redirectTo : '/not-found'}  */
+  { path : '**' , redirectTo : '/not-found'} 
 ]
+
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ const appRoutes : Routes = [
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
+    NgxSpinnerModule,
     RouterModule.forRoot(appRoutes)
     
   ],

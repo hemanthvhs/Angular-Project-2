@@ -6,12 +6,16 @@
   
 mat-sidenav {
     width: 290px;
+    height : 500px;
     background-color: #f2f2f2
 }
 
 mat-toolbar {
     background-color : #b3d9ff
 }
+
+
+
 
 select {
     background-color : #ffffff ;
@@ -79,16 +83,15 @@ span.input-group-addon {
 }
 
 
-.mat-table__wrapper .mat-table {
-    min-width: auto !important;
-    width: 100% !important;
-}
+.mat-cell {
+    padding-left: 8px;
+    padding-right : 8px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
 
-.mat-header-row {
-    width: 100%;
+.mat-header-cell {
+    padding-left: 8px;
+    padding-right : 8px;
 }
-
-.mat-row {
-    width: 100%;
-}
-

@@ -9,7 +9,7 @@ import { SharedService } from '../shared/services/shared.service';
 export class DialogComponent implements OnInit {
 
   message : string ;
-  caseNo  : string ;
+  ticketCode  : string ;
  
   constructor(public sharedService : SharedService) { }
 
@@ -18,7 +18,7 @@ export class DialogComponent implements OnInit {
     this.sharedService.currentMessage
     .subscribe( (dialogObject : any) => {
         this.message = dialogObject.message;
-        this.caseNo  = dialogObject.caseNo ;
+        this.ticketCode  = dialogObject.ticketCode ;
     })
   }
 
