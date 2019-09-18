@@ -34,21 +34,14 @@ label {
     padding-left : 12px;
 } */
 
+
+
 .btn-toolbar {
     margin-left : 50px
 }
 
-.fill-remaining-space  {
+.fill-remaining-space {
     flex : 1 1 auto;
-}
-
-span.title {
-    font-size : 20px;
-    font-weight : bold
-}
-
-span.currentuser {
-    font-size : 17px
 }
 
 span.filter {
@@ -69,11 +62,7 @@ span.input-group-addon {
    background-color: #808080 !important;
 }
 
-mat-error {
-    margin-left: 11px;
-    font-weight: bold;
-    font-size: 13px;
-}
+
 
 
 ::ng-deep  .mat-form-field-appearance-outline .mat-form-field-flex {
@@ -122,9 +111,6 @@ mat-error {
     color : black;
 }
 
-#required.control-label:after { 
-    content:"*";
-    color:red;
-    font-weight: normal;
-    font-size: 20px;
- }
+.filters {
+    margin-left: 110px;
+}

@@ -3,17 +3,26 @@ size = "medium"
 color = "#fff"
 type = "line-scale"
 >
-<p style="color: white" > Loading... </p>
 </ngx-spinner>
 
 <mat-toolbar *ngIf="outlet.isActivated == false">
   <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
     <mat-icon aria-label="Side nav toggle icon">search</mat-icon>
+    <span class="filter">Filters</span>
+  </button> 
+  
+  <button class="deletebtn" mat-icon-button type="button" (click)="onDeleteBtnClick()">
+    <span>Delete</span>
   </button>
-  <span class="filter">Filters</span>
+
   <span class="fill-remaining-space"></span>
-  <span>HR Portal Archive</span>
+  <span class="title">HR Portal Archive</span>
   <span class="fill-remaining-space"></span>
+
+  <span class="currentuser"><strong>Hi, {{currentUser}}</strong></span>
+
+
+
 </mat-toolbar>
 
 
@@ -22,22 +31,24 @@ type = "line-scale"
     <mat-nav-list>
       <form [formGroup]="searchForm">
 
-        <label for="serviceGroup" class="control-label">Service Group</label>
-        <mat-form-field appearance="outline">
-          <mat-select (selectionChange)="onServiceGroupChange($event.value)" formControlName="servicegroup">
+        <label id="required" class="control-label" >Service Group</label>
+        <mat-form-field  appearance="outline" >
+          <mat-select   formControlName="servicegroup" (selectionChange)="onServiceGroupChange($event.value)">
             <mat-option>None</mat-option>
             <mat-option [value]="serviceGroup" *ngFor="let serviceGroup of (serviceGroup$ | async)"> {{serviceGroup}}
             </mat-option>
           </mat-select>
+          <mat-error  *ngIf="!searchForm.controls['servicegroup'].valid && searchForm.controls['servicegroup'].touched">Service Group is required</mat-error>
         </mat-form-field>
 
-        <label for="population" class="control-label">Population</label>
+        <label id="required" for="population" class="control-label">Population</label>
         <mat-form-field appearance="outline">
           <mat-select (selectionChange)="onPopulationChange($event.value)" formControlName="population">
             <mat-option>None</mat-option>
             <mat-option [value]="population" *ngFor="let population of (population$ | async)">{{population}}
             </mat-option>
           </mat-select>
+          <mat-error  *ngIf="!searchForm.controls['population'].valid && searchForm.controls['population'].touched">Population is required</mat-error>
         </mat-form-field>
 
         <label for="category" class="control-label">Category</label>
@@ -66,7 +77,28 @@ type = "line-scale"
             </mat-option>
           </mat-select>
         </mat-form-field>
+        
+        <label for="userid" class="control-label">User ID</label>
+        <mat-form-field appearance="outline">
+            <input matInput formControlName="userid">
+        </mat-form-field>
 
+        <label for="ticketcode" class="control-label">Ticket Code</label>
+        <mat-form-field appearance="outline">
+            <input matInput formControlName="ticketcode">
+        </mat-form-field>
+
+        <label for="assignedto" class="control-label">Assigned To</label>
+        <mat-form-field appearance="outline">
+            <input matInput formControlName="assignedto">
+        </mat-form-field>
+
+        <label for="createddate" class="control-label">Created Date</label>
+        <mat-form-field  appearance="outline">
+            <input matInput [matDatepicker]="picker" formControlName="createddate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
 
       </form>
 
@@ -75,6 +107,7 @@ type = "line-scale"
       <div class="form-group btn-toolbar">
 
         <button class="btn btn-success" type="button" (click)="onSearch()">Search</button>
+        <button class="btn btn-danger" type="button" (click)="onReset()">Reset</button>
       </div>
 
 
@@ -82,21 +115,21 @@ type = "line-scale"
   </mat-sidenav>
   <mat-sidenav-content>
     <!-- Side Bar Content !!! -->
-    <mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort>
+    <mat-table class="mat-elevation-z8" matTableExporter [dataSource]="dataSource" matSort #exporter="matTableExporter" hiddenColumns="[0]">
 
-      <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()">
-          </mat-checkbox>
-        </mat-header-cell>
-
-        <mat-cell *matCellDef="let row">
-          <mat-checkbox #checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-            [checked]="selection.isSelected(row)">
-          </mat-checkbox>
-        </mat-cell>
-
-      </ng-container>
+        <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()">
+              </mat-checkbox>
+            </mat-header-cell>
+    
+            <mat-cell *matCellDef="let row">
+              <mat-checkbox #checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </mat-cell>
+    
+          </ng-container>
 
       <ng-container matColumnDef="Ticketcode">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Ticket Code</mat-header-cell>
@@ -118,6 +151,7 @@ type = "line-scale"
           </button>
         </mat-cell>
       </ng-container>
+
 
       <ng-container matColumnDef="USER_NAME">
           <mat-header-cell *matHeaderCellDef mat-sort-header>User Name</mat-header-cell>
@@ -167,9 +201,11 @@ type = "line-scale"
       
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row ;columns : displayedColumns;"></mat-row>
+      
     </mat-table>
 
     <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+    <button color="primary" mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Download Excel</button>
 
   </mat-sidenav-content>
 </mat-sidenav-container>

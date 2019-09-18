@@ -17,7 +17,7 @@ export class DialogComponent implements OnInit {
  
     this.sharedService.currentMessage
     .subscribe( (dialogObject : any) => {
-        this.message = dialogObject.message;
+        this.message     = dialogObject.message;
         this.ticketCode  = dialogObject.ticketCode ;
     })
   }

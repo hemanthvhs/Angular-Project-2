@@ -1,11 +1,5 @@
 import { Component, OnInit ,ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-/* import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator} from '@angular/material/paginator' */
-
 import { MatTableDataSource,MatSort, MatPaginator } from '@angular/material';
-
-import { DataService } from '../shared/services/data.service';
 import { NotificationService } from '../shared/services/notification.service';
 import { MatDialog, MatSidenav } from '@angular/material';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -19,6 +13,8 @@ import { Filters } from '../shared/models/filters';
 import { Ticket } from '../shared/models/ticketdata';
 import { NgxSpinnerService } from "ngx-spinner";
 import { mergeMap } from 'rxjs/operators';
+import { SharePointService } from '../shared/services/sharepoint.service';
+import { CanComponentDeactivate } from '../shared/services/guards/can-deactivate-guard.service';
 
 @Component({
   selector: 'app-searchpage',
@@ -26,7 +22,7 @@ import { mergeMap } from 'rxjs/operators';
   styleUrls: ['./search.component.css']
 })
 
-export class SearchComponent implements OnInit,AfterViewInit {
+export class SearchComponent implements OnInit,AfterViewInit,CanComponentDeactivate {
 
   searchForm              : FormGroup
   serviceGroup$           : Observable<any>
@@ -38,6 +34,8 @@ export class SearchComponent implements OnInit,AfterViewInit {
   closedStartDate         : string;
   closedEndDate           : string;
   filterData              = new Filters();
+  table                   : ElementRef;
+  currentUser             : string ; 
   
 
   selection = new SelectionModel(true, []);   
@@ -45,6 +43,7 @@ export class SearchComponent implements OnInit,AfterViewInit {
 
   constructor(private formBuilder : FormBuilder,
               private spinner: NgxSpinnerService,
+              private sharePointService : SharePointService,
               private sqlService  : SqlService,
               private notificationService : NotificationService,
               private sharedService : SharedService,
@@ -52,7 +51,7 @@ export class SearchComponent implements OnInit,AfterViewInit {
               private router : Router,
               private route  : ActivatedRoute) { }
 
-  
+
   displayedColumns : string[] = ['select','Ticketcode','actions','USER_NAME','Priority','ServiceGroup','Population','Category','SubCategory','Email','CreatedDateTime','Closed_Date_Time']
   dataSource = new MatTableDataSource<Ticket>()
   
@@ -73,13 +72,18 @@ export class SearchComponent implements OnInit,AfterViewInit {
       this.dataSource.paginator = this.paginator; 
     }
   }
-  
 
-
+  @ViewChild('table') set tableContent(tableContent: ElementRef) {
+     this.table = tableContent;
+  }
 
   ngOnInit() {
-
+    document.body.style.zoom = "95%";
     this.spinner.show();
+
+    this.sharePointService.getCurrentUserName().subscribe(currentUser => {
+      this.currentUser = currentUser
+    })
 
     setTimeout(() => {
       this.spinner.hide();
@@ -88,27 +92,32 @@ export class SearchComponent implements OnInit,AfterViewInit {
 
 
     this.searchForm = this.formBuilder.group({
+      
       servicegroup : ['',Validators.required],
       population   : ['',Validators.required],
-      category     : ['',Validators.required],
-      subcategory  : ['',Validators.required]
+      category     : [''],
+      subcategory  : [''],
+      userid       : [''],
+      ticketcode   : [''],
+      assignedto   : [''],
+      createddate  : ['']
     })
 
     this.serviceGroup$ = this.sqlService.getServiceGroups()
- 
-  }   // End of OnInit
-
- 
+  }  // End of OnInit
 
   ngAfterViewInit(){
     setTimeout(() => {
       this.dataSource.sort = this.sort
       this.dataSource.paginator = this.paginator
     });
-
-    console.log('Hi I am Called !')
     
   }
+
+  canDeactivate() : Observable<boolean> | Promise <boolean> | boolean{
+    return confirm('Existing Filters & Search Data will be lost')
+  }
+
 
   get category() : FormControl {
     return this.searchForm.get('category') as FormControl
@@ -147,32 +156,27 @@ export class SearchComponent implements OnInit,AfterViewInit {
   }
 
   masterToggle() {
-    if(this.isAllSelected()){
+    if(this.isAllSelected()) {
             this.selection.clear();
             
         }
-    else{
+    else {
             this.dataSource.data.forEach(row => this.selection.select(row));
            
     }
 
 }
 
-selectedRow(id : string) {
-  console.log(id)
-}
-
-
-
   onSearch() {
-    this.spinner.show();
+    
     document.body.scrollTop = document.documentElement.scrollTop = 0;
     this.filterData.serviceGroup = this.searchForm.get('servicegroup').value
     this.filterData.population   = this.searchForm.get('population').value
     this.filterData.category     = this.searchForm.get('category').value
     this.filterData.subCategory  = this.searchForm.get('subcategory').value
 
-    if(this.searchForm.get('servicegroup').value) {
+    if(this.searchForm.get('servicegroup').value && this.searchForm.get('population').value) {
+            this.spinner.show();
             this.drawer.toggle()
             this.sqlService.getTickets(this.filterData).subscribe( ticketData => {
               this.dataSource.data = ticketData;
@@ -181,10 +185,28 @@ selectedRow(id : string) {
           }
     
     else {
-      this.sharedService.passMessage({message : "Atleast one filter is required"})
+      this.searchForm.get('servicegroup').markAsTouched()
+      this.searchForm.get('population').markAsTouched()
+     
+      this.sharedService.passMessage({message : "Service Group & Population is required"})
       let dialogRef = this.dialog.open(DialogComponent)
       
     }
+  }
+
+  onReset() {
+    this.searchForm.get('servicegroup').patchValue('')
+    this.searchForm.get('population').patchValue('')
+    this.searchForm.get('category').patchValue('')
+    this.searchForm.get('subcategory').patchValue('')
+    this.searchForm.get('userid').patchValue('')
+    this.searchForm.get('ticketcode').patchValue('')
+    this.searchForm.get('assignedto').patchValue('')
+    this.searchForm.get('createddate').patchValue('')
+  }
+
+  onDeleteBtnClick() {
+    this.router.navigate(['/delete'],{relativeTo:this.route})
   }
 
   onLaunch(ticketCode : string) { 
@@ -195,11 +217,15 @@ selectedRow(id : string) {
   }
 
   onDelete(selectedTicketCode : string) {
-    
+    console.log(selectedTicketCode)
     this.sharedService.passMessage({message : 'Delete' , ticketCode : selectedTicketCode})
+    console.log("Before Opening Dialog!")
     let dialogRef = this.dialog.open(DialogComponent)
+    console.log(dialogRef)
+    console.log("AFTER DIALOG OPENED")
     dialogRef.afterClosed().subscribe(result => {
       
+
       if(result === 'true' && ((this.selection.selected.length === 1) || selectedTicketCode )) {
             this.spinner.show();
             this.sqlService.getAttachments(selectedTicketCode)
@@ -223,6 +249,8 @@ selectedRow(id : string) {
 
           }  
       
+    }, error => {
+      console.log(error)
     })   
   }
 
@@ -259,6 +287,10 @@ selectedRow(id : string) {
       }
     })
   }
+
+
+
+
 
 
 }    // End of Component Class

@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   constructor( private router : Router,
                private route  : ActivatedRoute) { }
 ngOnInit() {
+  document.body.style.zoom = "95%";
   this.router.navigate(['/search'])
 }
   

@@ -17,6 +17,7 @@ export class NotificationService {
   }
 
   openSnackBar(message : string) {
+    console.log(message)
       this.snackbar.open(message ,'',this.config)
   }
 }

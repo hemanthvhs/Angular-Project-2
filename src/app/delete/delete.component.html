@@ -1,0 +1,152 @@
+<mat-toolbar>
+    <button type="button"  mat-icon-button  routerLinkActive="active" routerLink="/search">
+      <mat-icon aria-label="Side nav toggle icon">arrow_back</mat-icon>
+      <span class="filter">Back to Search</span>
+    </button> 
+
+    <button class="filters" type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">search</mat-icon>
+        <span class="filter">Filters</span>
+      </button> 
+    
+  
+    <span class="fill-remaining-space"></span>
+    <span>HR Portal Archive</span>
+    <span class="fill-remaining-space"></span>
+  
+  
+  
+  </mat-toolbar>
+
+<mat-sidenav-container class="example-container">
+    <mat-sidenav #drawer mode="side" opened role="navigation">
+      <mat-nav-list>
+        <form [formGroup]="deleteForm">
+  
+            <label for="employeeid" class="control-label">Employee ID</label>
+            <mat-form-field appearance="outline">
+                <input matInput formControlName="employeeid">
+            </mat-form-field>
+
+          <label for="population" class="control-label">Population</label>
+          <mat-form-field appearance="outline">
+            <mat-select  formControlName="population">
+              <mat-option>None</mat-option>
+              <mat-option [value]="population" *ngFor="let population of (population$ | async)">{{population}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <label for="Date" class="control-label">Date</label> <br>
+          <mat-form-field appearance="outline">
+              <input class="date" matInput [matDatepicker]="picker" formControlName="date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+  
+        </form>
+  
+        <br>
+  
+        <div class="form-group btn-toolbar">
+  
+          <button class="btn btn-success" type="button" (click)="onSearch()">Search</button>
+         
+        </div>
+  
+  
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <!-- Side Bar Content !!! -->
+      <mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort hiddenColumns="[0]">
+
+          <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()">
+                </mat-checkbox>
+              </mat-header-cell>
+      
+              <mat-cell *matCellDef="let row">
+                <mat-checkbox #checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+              </mat-cell>
+      
+            </ng-container>
+
+        <ng-container matColumnDef="Ticketcode">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Ticket Code</mat-header-cell>
+          <mat-cell *matCellDef="let tickets">{{tickets.Ticketcode}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef> 
+              <button mat-icon-button matTooltip="Delete" color="warn" (click)="onMultiDelete()" *ngIf="this.selection.selected.length > 1">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+           
+            <button mat-icon-button matTooltip="Delete" color="warn" (click)="onDelete(row.Ticketcode)" *ngIf="this.selection.selected.length == 0 || this.selection.selected.length == 1 ">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="USER_NAME">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>User Name</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.USER_NAME}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Priority">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Priority</mat-header-cell>
+              <mat-cell *matCellDef="let tickets">{{tickets.Priority}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="ServiceGroup">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Service Group</mat-header-cell>
+                <mat-cell *matCellDef="let tickets">{{tickets.ServiceGroup}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Population">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Population</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.Population}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Category">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.Category}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="SubCategory">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Category</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.SubCategory}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Email">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.Email}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="CreatedDateTime">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Created Date</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.CreatedDateTime}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Closed_Date_Time">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Closed Date</mat-header-cell>
+            <mat-cell *matCellDef="let tickets">{{tickets.Closed_Date_Time}}</mat-cell>
+        </ng-container>
+
+        
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row ;columns : displayedColumns;"></mat-row>
+        
+      </mat-table>
+  
+      <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+  
+    </mat-sidenav-content>
+  </mat-sidenav-container>
