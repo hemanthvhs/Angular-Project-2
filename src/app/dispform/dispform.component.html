@@ -43,21 +43,21 @@
       <div class="row">
         <div class="form-group col-xs-5">
           <label for="subject" class="control-label">Subject</label>
-          <input id="subject" type="text" class="form-control" formControlName="subject">
+          <textarea id="subject" type="text" class="form-control" formControlName="subject"></textarea>
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col-xs-5">
           <label for="issue" class="control-label">Issue</label>
-          <input id="issue" type="text" class="form-control" formControlName="issue">
+          <textarea id="issue" type="text" class="form-control" formControlName="issue"></textarea>
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col-xs-5">
           <label for="regarding" class="control-label">Regarding</label>
-          <input id="regarding" type="text" class="form-control" formControlName="regarding">
+          <textarea id="regarding" type="text" class="form-control" formControlName="regarding"></textarea>
         </div>
       </div>
 
@@ -209,9 +209,9 @@
 
       <div class="row">
         <div class="form-group col-xs-5">
-          <label for="preferredmethodofcommunication" class="control-label">Metodo Preferido de Comunicacion</label>
-          <input id="preferredmethodofcommunication" type="text" class="form-control"
-            formControlName="preferredmethodofcommunication">
+          <label for="prfrdcommunication" class="control-label">Metodo Preferido de Comunicacion</label>
+          <input id="prfrdcommunication" type="text" class="form-control"
+            formControlName="prfrdcommunication">
         </div>
       </div>
 
@@ -403,13 +403,18 @@
     </div>
 
     <div class="row">
-      <ul class="list-group">
-        <li class="list-group-item"></li>
-
-      </ul>
+            <div *ngIf = "selectedFiles.length > 0" class="list-group">
+              <div class="list-group-item" *ngFor="let file of selectedFiles;let idx=index">
+                {{file.filename}}
+                  <span class="btn glyphicon glyphicon-download-alt pull-left"(click)="onDownload(file.filename,file.filepath)"></span>
+              </div>
+            </div>            
     </div>
 
-  </div> <br>
+
+         
+
+
 
 </div> <br>
 

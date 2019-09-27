@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { SharedService } from './shared.service';
 
 
 @Injectable({
@@ -10,14 +11,15 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 
 export class SharePointService {
 
-
     headers : HttpHeaders = new HttpHeaders ({
         'Content-Type'    : 'application/json;odata=verbose',
         'Accept'          : 'application/json;odata=verbose'             
       })
 
-   /*  baseURL  = "http://twnj0749shpnt03/sites/hrportalarchive/" */
-    baseURL  = "http://regsharedev.bdx.com/sites/HRPortalArchival/"
+    baseURL  = "http://twnj0749shpnt03/sites/HRPortalArchival/"
+    /* baseURL  = "http://regsharedev.bdx.com/sites/HRPortalArchival/" */
+
+
 
     constructor(private http : HttpClient) { }
 

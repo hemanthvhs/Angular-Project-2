@@ -13,6 +13,7 @@ import { Filters } from '../shared/models/filters';
 import { Ticket } from '../shared/models/ticketdata';
 import { NgxSpinnerService } from "ngx-spinner";
 import { mergeMap } from 'rxjs/operators';
+import { SharePointService } from '../shared/services/sharepoint.service';
 
 
 @Component({
@@ -23,16 +24,19 @@ import { mergeMap } from 'rxjs/operators';
 export class DeleteComponent implements OnInit {
 
   deleteForm              : FormGroup
+  currentUser             : string
+  population$             : Observable<any>
+  filterData              = new Filters();
+
   selection = new SelectionModel(true, []);   
 
   constructor(private formBuilder : FormBuilder,
-    private spinner: NgxSpinnerService,
-    private sqlService  : SqlService,
-    private notificationService : NotificationService,
-    private sharedService : SharedService,
-    private dialog : MatDialog,
-    private router : Router,
-    private route  : ActivatedRoute) { }
+              private spinner: NgxSpinnerService,
+              private sharePointService : SharePointService,
+              private sqlService  : SqlService,
+              private notificationService : NotificationService,
+              private sharedService : SharedService,
+              private dialog : MatDialog) { }
 
 
     displayedColumns : string[] = ['select','Ticketcode','actions','USER_NAME','Priority','ServiceGroup','Population','Category','SubCategory','Email','CreatedDateTime','Closed_Date_Time']
@@ -56,14 +60,41 @@ export class DeleteComponent implements OnInit {
   }
 
 
+
   ngOnInit() {
 
-    this.deleteForm = this.formBuilder.group({
-      employeeid  : [''],
-      population  : [''],
-      date        : ['']
+    this.spinner.show();
+
+    this.sharePointService.getCurrentUserName().subscribe(currentUser => {
+      this.currentUser = currentUser
     })
+
+    
+
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
+
+    this.deleteForm = this.formBuilder.group({
+      
+      population   : ['',Validators.required],
+      userid       : [''],
+      createddate  : ['']
+    })
+
+    this.population$ = this.sqlService.getDeletePagePopulation()
+   
+  } // End of OnInit
+
+  ngAfterViewInit(){
+    setTimeout(() => {
+      this.dataSource.sort = this.sort
+      this.dataSource.paginator = this.paginator
+    });
+    
   }
+
+  
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -73,18 +104,113 @@ export class DeleteComponent implements OnInit {
 
   masterToggle() {
     if(this.isAllSelected()){
-            this.selection.clear();
-            
+            this.selection.clear();   
         }
-    else{
-            this.dataSource.data.forEach(row => this.selection.select(row));
-           
-    }
-
+    else {
+            this.dataSource.data.forEach(row => this.selection.select(row));   
+        }
 }
+
 
 onSearch() {
-  this.drawer.toggle()
+
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+  this.filterData.userID       = this.deleteForm.get('userid').value
+  this.filterData.population   = this.deleteForm.get('population').value
+  this.filterData.createdDate  = this.deleteForm.get('createddate').value ?
+                                 this.deleteForm.get('createddate').value.toISOString().substring(0,10) : ''
+
+  const isSearchAllowed : boolean = this.deleteForm.get('userid').value       ? true :
+                                    this.deleteForm.get('population').value   ? true :
+                                    this.deleteForm.get('createddate').value  ? true : false
+
+  if(isSearchAllowed) {
+
+        this.spinner.show();
+        this.drawer.toggle()
+        this.sqlService.getDeletePageTickets(this.filterData).subscribe( ticketData => {
+          this.dataSource.data = ticketData;
+          this.spinner.hide();
+        })
+
+  }
+  else { 
+    this.sharedService.passMessage({message : 'Atleast one filter is required'})
+    this.dialog.open(DialogComponent)
+    
+  }
+
 }
+
+onReset() {
+  this.deleteForm.get('population').patchValue('')
+  this.deleteForm.get('userid').patchValue('')
+  this.deleteForm.get('createddate').patchValue('')
+}
+
+onDelete(selectedTicketCode : string) {
+
+  this.sharedService.passMessage({message : 'Delete' , ticketCode : selectedTicketCode})
+  let dialogRef = this.dialog.open(DialogComponent)
+  dialogRef.afterClosed().pipe(
+    mergeMap(result => {
+      if(result === 'true' && ((this.selection.selected.length === 1) || selectedTicketCode )) {
+        this.spinner.show()
+        return this.sqlService.getDeletePageAttachments(selectedTicketCode)
+      }
+    }),
+    mergeMap((filePaths)=> {
+      return this.sqlService.deleteTicketDetails(selectedTicketCode,filePaths)
+    })
+  ).subscribe(() => {
+    let index = this.dataSource.data.findIndex(ticketData => ticketData.Ticketcode === selectedTicketCode)
+    this.dataSource.data.splice(index,1)
+    this.dataSource = new MatTableDataSource<Ticket>(this.dataSource.data)
+    this.spinner.hide()
+    this.selection = new SelectionModel(true, []);
+    this.spinner.hide()
+    this.notificationService.openSnackBar('Deleted Successfully')
+    this.dataSource.sort = this.sort
+    this.dataSource.paginator = this.paginator
+    
+  })
+}
+
+onMultiDelete() {
+  var selectedTicketCodes : string[] = this.selection.selected.map(tickets => {
+    return tickets.Ticketcode
+  })
+  this.sharedService.passMessage({message : 'Delete',dataCount : selectedTicketCodes.length})
+  var selectedTicketCodes : string[] = this.selection.selected.map(tickets => {
+    return tickets.Ticketcode
+  })
+  let dialogRef = this.dialog.open(DialogComponent)
+  dialogRef.afterClosed().pipe(
+    mergeMap(result => {
+      if(result === 'true' && this.selection.selected.length > 1) {
+        this.spinner.show()
+       
+        return this.sqlService.getDeletePageAttachments(selectedTicketCodes)
+      }
+    }),
+    mergeMap((filePaths)=> {
+      return this.sqlService.deleteTicketDetails(selectedTicketCodes,filePaths)
+    })
+  ).subscribe(() => 
+          this.selection.selected.forEach(item => {
+          let index = this.dataSource.data.findIndex(ticketData => ticketData.Ticketcode === item.Ticketcode)
+          this.dataSource.data.splice(index,1)
+          this.dataSource = new MatTableDataSource<Ticket>(this.dataSource.data)
+          this.spinner.hide()
+          this.selection = new SelectionModel(true, []);
+          this.notificationService.openSnackBar('Deleted Successfully')
+          this.dataSource.sort = this.sort
+          this.dataSource.paginator = this.paginator
+          })) 
+}
+
+
+
 
 }

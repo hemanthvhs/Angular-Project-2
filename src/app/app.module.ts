@@ -4,7 +4,6 @@ import { ReactiveFormsModule,FormsModule} from '@angular/forms' ;
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule} from './shared/modules/material.module'
 import { HttpClientModule} from '@angular/common/http'
-import { MatTableExporterModule } from 'mat-table-exporter';
 import { AppComponent } from './app.component';
 import { DispformComponent } from './dispform/dispform.component';
 
@@ -21,15 +20,15 @@ import { RouterModule,Routes } from '@angular/router';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { DeleteComponent } from './delete/delete.component';
 import { SharePointService } from './shared/services/sharepoint.service';
-import { AuthGuard } from './shared/services/guards/auth-guard.service';
-import { AuthService } from './shared/services/guards/auth.service';
+import { CanActivateGuard } from './shared/services/guards/can-activate-guard.service';
 import { CanDeactivateGuard } from './shared/services/guards/can-deactivate-guard.service';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 const appRoutes : Routes = [
   { path : '' , component: SearchComponent },
   { path : 'search' , component: SearchComponent, canDeactivate : [CanDeactivateGuard],
     children : [{ path : 'form' , component : DispformComponent}]},
-  { path : 'delete' , canActivate : [AuthGuard],component : DeleteComponent},
+  { path : 'delete' , canActivate : [CanActivateGuard],component : DeleteComponent},
   { path : 'not-found' , component : PageNotFoundComponent},
   { path : '**' , redirectTo : '/not-found'} 
 ]
@@ -58,7 +57,7 @@ const appRoutes : Routes = [
     
   ],
   providers: [PrintService,SqlService,SharePointService,NotificationService,
-              SharedService,AuthGuard,AuthService,CanDeactivateGuard],
+              SharedService,CanActivateGuard,CanDeactivateGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

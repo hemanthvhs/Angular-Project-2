@@ -10,9 +10,9 @@ export class SharedService {
 
   private messageSource   = new BehaviorSubject<Object>("");
   currentMessage          = this.messageSource.asObservable();
+  
 
-
-  passMessage(dialogMessage : {message: string , ticketCode ?: string}) {
+  passMessage(dialogMessage : {message: string , ticketCode ?: string, dataCount ?:number}) {
     this.messageSource.next(dialogMessage)
   }
 

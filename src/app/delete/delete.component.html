@@ -1,3 +1,10 @@
+<ngx-spinner
+size = "medium"
+color = "#fff"
+type = "line-scale"
+>
+</ngx-spinner>
+
 <mat-toolbar>
     <button type="button"  mat-icon-button  routerLinkActive="active" routerLink="/search">
       <mat-icon aria-label="Side nav toggle icon">arrow_back</mat-icon>
@@ -11,9 +18,11 @@
     
   
     <span class="fill-remaining-space"></span>
-    <span>HR Portal Archive</span>
+    <span class="title">HR Portal Archive</span>
     <span class="fill-remaining-space"></span>
   
+    <span class="currentuser"><strong>Hi, {{currentUser}}</strong></span>
+
   
   
   </mat-toolbar>
@@ -22,24 +31,24 @@
     <mat-sidenav #drawer mode="side" opened role="navigation">
       <mat-nav-list>
         <form [formGroup]="deleteForm">
-  
-            <label for="employeeid" class="control-label">Employee ID</label>
+
+            <label  for="population" class="control-label">Population</label>
             <mat-form-field appearance="outline">
-                <input matInput formControlName="employeeid">
+              <mat-select  formControlName="population">
+                <mat-option>None</mat-option>
+                <mat-option [value]="population" *ngFor="let population of (population$ | async)">{{population}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <label for="userid" class="control-label">Employee ID</label>
+            <mat-form-field appearance="outline">
+                <input matInput formControlName="userid">
             </mat-form-field>
 
-          <label for="population" class="control-label">Population</label>
+          <label for="Date" class="control-label">Created Date</label> <br>
           <mat-form-field appearance="outline">
-            <mat-select  formControlName="population">
-              <mat-option>None</mat-option>
-              <mat-option [value]="population" *ngFor="let population of (population$ | async)">{{population}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <label for="Date" class="control-label">Date</label> <br>
-          <mat-form-field appearance="outline">
-              <input class="date" matInput [matDatepicker]="picker" formControlName="date">
+              <input class="date" matInput [matDatepicker]="picker" formControlName="createddate">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
@@ -52,6 +61,7 @@
         <div class="form-group btn-toolbar">
   
           <button class="btn btn-success" type="button" (click)="onSearch()">Search</button>
+          <button class="btn btn-danger" type="button" (click)="onReset()">Reset</button>
          
         </div>
   

@@ -1,7 +1,7 @@
 <div *ngIf = "message == 'Delete'">
     <h5 class="mat-dialog-title" *ngIf = "ticketCode">Ticket Code : {{ticketCode}}</h5>
     <h5 class="mat-dialog-title" *ngIf = "ticketCode">Delete ?</h5>
-    <h5 class="mat-dialog-title" *ngIf = "!ticketCode">Multi Deletion</h5>
+    <h5 class="mat-dialog-title" *ngIf = "!ticketCode">Multi Deletion : {{dataCount}}</h5>
     <h5 class="mat-dialog-title" *ngIf = "!ticketCode">Are you sure ?</h5>
     <mat-dialog-actions>
       <button mat-button mat-dialog-close mat-dialog-close="false">No</button>
@@ -9,13 +9,25 @@
     </mat-dialog-actions>
 </div>
 
-<div *ngIf = "message == 'Service Group & Population is required'">
-    <h5 class="mat-dialog-title" >Service Group,Population </h5>
-    <h5 class="mat-dialog-title">is required</h5>
+<div *ngIf = "message == 'You do not have enough privileges'">
+    <h5 class="mat-dialog-title">{{message}}</h5>
+    <h5 class="mat-dialog-title">Contact : ASC Process Leads</h5>
+    <a class="mat-dialog-title" href="http://twnj0749shpnt03/sites/HRPortalArchival/_layouts/15/start.aspx#/_layouts/15/people.aspx?MembershipGroupId=9" target="_blank">Contact Link</a>
+    
     <mat-dialog-actions>
-    <button id="customBtn" mat-button mat-dialog-close mat-dialog-close="true">OK</button>
+    <button id="customBtn"  mat-button mat-dialog-close mat-dialog-close="true">OK</button>
     </mat-dialog-actions>
 </div>
+
+<div *ngIf = "message == 'Atleast one filter is required'">
+    <h5 class="mat-dialog-title">Atleast one filter is required</h5>
+        
+    <mat-dialog-actions>
+    <button  id="customBtn1" mat-button mat-dialog-close mat-dialog-close="true">OK</button>
+    </mat-dialog-actions>
+</div>
+
+
      
 
 

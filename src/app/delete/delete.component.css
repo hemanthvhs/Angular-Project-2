@@ -114,3 +114,25 @@ span.input-group-addon {
 .filters {
     margin-left: 110px;
 }
+
+#required.control-label:after { 
+    content:"*";
+    color:red;
+    font-weight: normal;
+    font-size: 20px;
+ }
+
+ mat-error {
+    margin-left: 11px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+span.title {
+    font-size : 20px;
+    font-weight : bold
+}
+
+span.currentuser {
+    font-size : 17px
+}

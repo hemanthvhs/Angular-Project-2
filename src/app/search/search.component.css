@@ -121,10 +121,3 @@ mat-error {
     font-size: 15px;
     color : black;
 }
-
-#required.control-label:after { 
-    content:"*";
-    color:red;
-    font-weight: normal;
-    font-size: 20px;
- }

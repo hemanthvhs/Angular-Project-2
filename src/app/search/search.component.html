@@ -12,6 +12,7 @@ type = "line-scale"
   </button> 
   
   <button class="deletebtn" mat-icon-button type="button" (click)="onDeleteBtnClick()">
+    <mat-icon>delete_outline</mat-icon>
     <span>Delete</span>
   </button>
 
@@ -26,29 +27,37 @@ type = "line-scale"
 </mat-toolbar>
 
 
-<mat-sidenav-container class="example-container" *ngIf="outlet.isActivated == false">
+<mat-sidenav-container class="example-container" *ngIf="outlet.isActivated == false" >
   <mat-sidenav #drawer mode="side" opened role="navigation">
     <mat-nav-list>
       <form [formGroup]="searchForm">
 
-        <label id="required" class="control-label" >Service Group</label>
+          <label for="ticketcode" class="control-label">Ticket Code</label>
+          <mat-form-field appearance="outline">
+              <input matInput formControlName="ticketcode">
+          </mat-form-field>
+
+          <label for="userid" class="control-label">Employee ID</label>
+          <mat-form-field appearance="outline">
+            <input matInput formControlName="userid">
+          </mat-form-field>
+
+        <label for="servicegroup" class="control-label" >Service Group</label>
         <mat-form-field  appearance="outline" >
           <mat-select   formControlName="servicegroup" (selectionChange)="onServiceGroupChange($event.value)">
             <mat-option>None</mat-option>
             <mat-option [value]="serviceGroup" *ngFor="let serviceGroup of (serviceGroup$ | async)"> {{serviceGroup}}
             </mat-option>
           </mat-select>
-          <mat-error  *ngIf="!searchForm.controls['servicegroup'].valid && searchForm.controls['servicegroup'].touched">Service Group is required</mat-error>
         </mat-form-field>
 
-        <label id="required" for="population" class="control-label">Population</label>
+        <label for="population" class="control-label">Population</label>
         <mat-form-field appearance="outline">
           <mat-select (selectionChange)="onPopulationChange($event.value)" formControlName="population">
             <mat-option>None</mat-option>
             <mat-option [value]="population" *ngFor="let population of (population$ | async)">{{population}}
             </mat-option>
           </mat-select>
-          <mat-error  *ngIf="!searchForm.controls['population'].valid && searchForm.controls['population'].touched">Population is required</mat-error>
         </mat-form-field>
 
         <label for="category" class="control-label">Category</label>
@@ -76,16 +85,6 @@ type = "line-scale"
             <mat-option [value]="subCategory" *ngFor="let subCategory of (subCategory$ | async)">{{subCategory}}
             </mat-option>
           </mat-select>
-        </mat-form-field>
-        
-        <label for="userid" class="control-label">User ID</label>
-        <mat-form-field appearance="outline">
-            <input matInput formControlName="userid">
-        </mat-form-field>
-
-        <label for="ticketcode" class="control-label">Ticket Code</label>
-        <mat-form-field appearance="outline">
-            <input matInput formControlName="ticketcode">
         </mat-form-field>
 
         <label for="assignedto" class="control-label">Assigned To</label>
@@ -115,21 +114,8 @@ type = "line-scale"
   </mat-sidenav>
   <mat-sidenav-content>
     <!-- Side Bar Content !!! -->
-    <mat-table class="mat-elevation-z8" matTableExporter [dataSource]="dataSource" matSort #exporter="matTableExporter" hiddenColumns="[0]">
 
-        <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef>
-              <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()">
-              </mat-checkbox>
-            </mat-header-cell>
-    
-            <mat-cell *matCellDef="let row">
-              <mat-checkbox #checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)">
-              </mat-checkbox>
-            </mat-cell>
-    
-          </ng-container>
+    <mat-table [dataSource]="dataSource"  matSort matTableExporter   #exporter="matTableExporter" >
 
       <ng-container matColumnDef="Ticketcode">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Ticket Code</mat-header-cell>
@@ -138,16 +124,11 @@ type = "line-scale"
 
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef> 
-            <button mat-icon-button matTooltip="Delete" color="warn" (click)="onMultiDelete()" *ngIf="this.selection.selected.length > 1">
-                <mat-icon>delete_outline</mat-icon>
-              </button>
+           
         </mat-header-cell>
         <mat-cell *matCellDef="let row">
           <button mat-icon-button matTooltip="Form" (click)="onLaunch(row.Ticketcode)">
             <mat-icon>launch</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Delete" color="warn" (click)="onDelete(row.Ticketcode)" *ngIf="this.selection.selected.length == 0 || this.selection.selected.length == 1 ">
-            <mat-icon>delete_outline</mat-icon>
           </button>
         </mat-cell>
       </ng-container>
@@ -205,11 +186,11 @@ type = "line-scale"
     </mat-table>
 
     <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
-    <button color="primary" mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Download Excel</button>
+    
+    <button color="primary" mat-raised-button (click)="exporter.exportTable('xlsx')">Export to Excel</button>
 
   </mat-sidenav-content>
 </mat-sidenav-container>
-
 
 
     <router-outlet #outlet="outlet"></router-outlet>

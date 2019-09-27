@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 
@@ -9,8 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor( private router : Router,
-               private route  : ActivatedRoute) { }
+  constructor( private router : Router) { }
 ngOnInit() {
   document.body.style.zoom = "95%";
   this.router.navigate(['/search'])

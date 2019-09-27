@@ -56,11 +56,11 @@ textarea#formgroup1 {
     flex: 0 0 688px;
 } */
 
-.mat-cell, .mat-header-cell {
+/* .mat-cell, .mat-header-cell {
      overflow: hidden; 
      text-overflow: ellipsis; 
      word-break: break-word; 
-    }
+    } */
 
 
     div.btn-toolbar {
@@ -68,3 +68,46 @@ textarea#formgroup1 {
         align-items: center;
         justify-content: center;
     }
+
+    .btn {
+        margin-top: -10px;
+        
+    }
+
+    
+.mat-cell {
+    padding-left: 8px;
+    padding-right : 8px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+.mat-header-cell {
+    padding-left: 8px;
+    padding-right : 8px;
+    font-weight:bold;
+    font-size: 15px;
+    color : black;
+}
+
+.mat-column-type {
+    
+    flex: 0 0 17% !important;
+    width: 17% !important;
+   
+  }
+
+  .mat-column-details {
+    
+    flex: 0 0 66% !important;
+    width: 66% !important;
+   
+  }
+
+  textarea {
+
+    height: auto;
+    background-color : #F4F6F7;
+
+  }

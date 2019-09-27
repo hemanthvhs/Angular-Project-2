@@ -4,17 +4,17 @@ import { NotificationService } from '../shared/services/notification.service';
 import { MatDialog, MatSidenav } from '@angular/material';
 import { DialogComponent } from '../dialog/dialog.component';
 import { SharedService } from '../shared/services/shared.service';
-import { Router,ActivatedRoute,Params } from '@angular/router';
-import { SelectionModel } from '@angular/cdk/collections'
-import { Observable } from 'rxjs';
+import { Router,ActivatedRoute } from '@angular/router';
+import { Observable, merge } from 'rxjs';
 import { SqlService } from '../shared/services/sql.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Filters } from '../shared/models/filters';
 import { Ticket } from '../shared/models/ticketdata';
 import { NgxSpinnerService } from "ngx-spinner";
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, tap } from 'rxjs/operators';
 import { SharePointService } from '../shared/services/sharepoint.service';
 import { CanComponentDeactivate } from '../shared/services/guards/can-deactivate-guard.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-searchpage',
@@ -36,9 +36,9 @@ export class SearchComponent implements OnInit,AfterViewInit,CanComponentDeactiv
   filterData              = new Filters();
   table                   : ElementRef;
   currentUser             : string ; 
-  
-
-  selection = new SelectionModel(true, []);   
+  ticketData              : any
+  fileurl
+  fileUrl: any;
   
 
   constructor(private formBuilder : FormBuilder,
@@ -49,11 +49,12 @@ export class SearchComponent implements OnInit,AfterViewInit,CanComponentDeactiv
               private sharedService : SharedService,
               private dialog : MatDialog,
               private router : Router,
-              private route  : ActivatedRoute) { }
+              private route  : ActivatedRoute, private sanitizer: DomSanitizer) { }
 
-
-  displayedColumns : string[] = ['select','Ticketcode','actions','USER_NAME','Priority','ServiceGroup','Population','Category','SubCategory','Email','CreatedDateTime','Closed_Date_Time']
-  dataSource = new MatTableDataSource<Ticket>()
+  
+  
+   displayedColumns : string[] = ['Ticketcode','actions','USER_NAME','Priority','ServiceGroup','Population','Category','SubCategory','Email','CreatedDateTime','Closed_Date_Time']
+   dataSource = new MatTableDataSource<Ticket>()
   
  
   @ViewChild('drawer') drawer : MatSidenav
@@ -73,11 +74,9 @@ export class SearchComponent implements OnInit,AfterViewInit,CanComponentDeactiv
     }
   }
 
-  @ViewChild('table') set tableContent(tableContent: ElementRef) {
-     this.table = tableContent;
-  }
 
   ngOnInit() {
+
     document.body.style.zoom = "95%";
     this.spinner.show();
 
@@ -89,12 +88,10 @@ export class SearchComponent implements OnInit,AfterViewInit,CanComponentDeactiv
       this.spinner.hide();
     }, 1000);
 
-
-
     this.searchForm = this.formBuilder.group({
       
-      servicegroup : ['',Validators.required],
-      population   : ['',Validators.required],
+      servicegroup : [''],
+      population   : [''],
       category     : [''],
       subcategory  : [''],
       userid       : [''],
@@ -149,47 +146,44 @@ export class SearchComponent implements OnInit,AfterViewInit,CanComponentDeactiv
     this.subCategory$ = this.sqlService.getSubCategory(serviceGroup,population,category)
   }
 
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle() {
-    if(this.isAllSelected()) {
-            this.selection.clear();
-            
-        }
-    else {
-            this.dataSource.data.forEach(row => this.selection.select(row));
-           
-    }
-
-}
 
   onSearch() {
     
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    document.body.scrollTop      = document.documentElement.scrollTop = 0;
+
     this.filterData.serviceGroup = this.searchForm.get('servicegroup').value
     this.filterData.population   = this.searchForm.get('population').value
     this.filterData.category     = this.searchForm.get('category').value
     this.filterData.subCategory  = this.searchForm.get('subcategory').value
+    this.filterData.userID       = this.searchForm.get('userid').value
+    this.filterData.ticketCode   = this.searchForm.get('ticketcode').value
+    this.filterData.assignedTo   = this.searchForm.get('assignedto').value
+    this.filterData.createdDate  = this.searchForm.get('createddate').value ? 
+                                   this.searchForm.get('createddate').value.toISOString().substring(0,10) : ''
+    
 
-    if(this.searchForm.get('servicegroup').value && this.searchForm.get('population').value) {
+    const isSearchAllowed : boolean = this.searchForm.get('ticketcode').value   ? true :
+                                      this.searchForm.get('userid').value       ? true :
+                                      this.searchForm.get('servicegroup').value ? true :
+                                      this.searchForm.get('population').value   ? true :
+                                      this.searchForm.get('category').value     ? true :
+                                      this.searchForm.get('subcategory').value  ? true :
+                                      this.searchForm.get('assignedto').value   ? true :
+                                      this.searchForm.get('createddate').value  ? true : false
+
+    if(isSearchAllowed) {
             this.spinner.show();
             this.drawer.toggle()
-            this.sqlService.getTickets(this.filterData).subscribe( ticketData => {
+            this.sqlService.getSearchPageTickets(this.filterData).subscribe( ticketData => {
+              this.ticketData = ticketData
               this.dataSource.data = ticketData;
               this.spinner.hide();
             })
           }
     
     else {
-      this.searchForm.get('servicegroup').markAsTouched()
-      this.searchForm.get('population').markAsTouched()
-     
-      this.sharedService.passMessage({message : "Service Group & Population is required"})
-      let dialogRef = this.dialog.open(DialogComponent)
+      this.sharedService.passMessage({message : 'Atleast one filter is required'})
+      this.dialog.open(DialogComponent)
       
     }
   }
@@ -215,82 +209,5 @@ export class SearchComponent implements OnInit,AfterViewInit,CanComponentDeactiv
     {relativeTo:this.route,queryParams : {TicketCode : ticketCode,Mode:'ReadOnly'}})
     
   }
-
-  onDelete(selectedTicketCode : string) {
-    console.log(selectedTicketCode)
-    this.sharedService.passMessage({message : 'Delete' , ticketCode : selectedTicketCode})
-    console.log("Before Opening Dialog!")
-    let dialogRef = this.dialog.open(DialogComponent)
-    console.log(dialogRef)
-    console.log("AFTER DIALOG OPENED")
-    dialogRef.afterClosed().subscribe(result => {
-      
-
-      if(result === 'true' && ((this.selection.selected.length === 1) || selectedTicketCode )) {
-            this.spinner.show();
-            this.sqlService.getAttachments(selectedTicketCode)
-            .pipe(mergeMap(filePaths => {
-              return this.sqlService.deleteAttachments(filePaths)
-                     .pipe(mergeMap(() => {
-                       return this.sqlService.deleteTicketDetails(selectedTicketCode)
-                     }))
-            }))
-            .subscribe( () => {
-              let index = this.dataSource.data.findIndex(ticketData => ticketData.Ticketcode === selectedTicketCode)
-              this.dataSource.data.splice(index,1)
-              this.dataSource = new MatTableDataSource<Ticket>(this.dataSource.data)
-              this.spinner.hide()
-              this.selection = new SelectionModel(true, []);
-              this.notificationService.openSnackBar('Deleted Successfully')
-              this.dataSource.sort = this.sort
-              this.dataSource.paginator = this.paginator
-            })
-
-
-          }  
-      
-    }, error => {
-      console.log(error)
-    })   
-  }
-
-  onMultiDelete() {
-    this.sharedService.passMessage({message : 'Delete'})
-    let dialogRef = this.dialog.open(DialogComponent)
-    dialogRef.afterClosed().subscribe(result => {
-
-      if(result === 'true' && this.selection.selected.length > 1) {
-
-        this.spinner.show();
-        const selectedTicketCodes : string[] = this.selection.selected.map(tickets => {
-            return tickets.Ticketcode
-        })
-        
-        this.sqlService.getAttachments(selectedTicketCodes)
-        .pipe(mergeMap(filePaths => {
-          return this.sqlService.deleteAttachments(filePaths)
-                 .pipe(mergeMap(() => {
-                   return this.sqlService.deleteTicketDetails(selectedTicketCodes)
-                 }))
-        })).subscribe(() => 
-            this.selection.selected.forEach(item => {
-            let index = this.dataSource.data.findIndex(ticketData => ticketData.Ticketcode === item.Ticketcode)
-            this.dataSource.data.splice(index,1)
-            this.dataSource = new MatTableDataSource<Ticket>(this.dataSource.data)
-            this.spinner.hide()
-            this.selection = new SelectionModel(true, []);
-            this.notificationService.openSnackBar('Deleted Successfully')
-            this.dataSource.sort = this.sort
-            this.dataSource.paginator = this.paginator
-            })) 
-       
-      }
-    })
-  }
-
-
-
-
-
 
 }    // End of Component Class

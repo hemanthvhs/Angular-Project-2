@@ -10,6 +10,7 @@ export class DialogComponent implements OnInit {
 
   message : string ;
   ticketCode  : string ;
+  dataCount  : number ;
  
   constructor(public sharedService : SharedService) { }
 
@@ -19,6 +20,8 @@ export class DialogComponent implements OnInit {
     .subscribe( (dialogObject : any) => {
         this.message     = dialogObject.message;
         this.ticketCode  = dialogObject.ticketCode ;
+        this.dataCount   = dialogObject.dataCount;
+        console.log(this.message)
     })
   }
 
